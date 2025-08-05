@@ -1,0 +1,72 @@
+#Iris Dataset Analysis and Visualization
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.datasets import load_iris
+
+# Task 1: Load and Explore the Dataset
+try:
+    iris = load_iris()
+    df = pd.DataFrame(iris.data, columns=iris.feature_names)
+    df['species'] = iris.target
+    df['species'] = df['species'].map({i: name for i, name in enumerate(iris.target_names)})
+    print("Dataset loaded successfully!\n")
+except Exception as e:
+    print("Error loading dataset:", e)
+
+# Display first few rows
+print("First 5 rows of the dataset:\n", df.head())
+
+# Data types and missing values
+print("\nData types:\n", df.dtypes)
+print("\nMissing values:\n", df.isnull().sum())
+
+# Clean the dataset (if any missing values)
+df.dropna(inplace=True)
+
+# Task 2: Basic Data Analysis
+print("\nStatistical Summary:\n", df.describe())
+
+# Group by species and compute mean of each feature
+grouped_means = df.groupby("species").mean()
+print("\nMean of features grouped by species:\n", grouped_means)
+
+# Task 3: Data Visualization
+
+# 1. Line Chart
+plt.figure(figsize=(10, 5))
+plt.plot(df.index, df['sepal length (cm)'], label='Sepal Length')
+plt.plot(df.index, df['petal length (cm)'], label='Petal Length')
+plt.title("Sepal and Petal Length Trend over Index")
+plt.xlabel("Sample Index")
+plt.ylabel("Length (cm)")
+plt.legend()
+plt.grid(True)
+plt.show()
+
+# 2. Bar Chart
+plt.figure(figsize=(7, 5))
+sns.barplot(x=grouped_means.index, y=grouped_means['petal length (cm)'])
+plt.title("Average Petal Length per Species")
+plt.xlabel("Species")
+plt.ylabel("Petal Length (cm)")
+plt.show()
+
+# 3. Histogram
+plt.figure(figsize=(7, 5))
+plt.hist(df['sepal width (cm)'], bins=15, edgecolor='black', color='skyblue')
+plt.title("Distribution of Sepal Width")
+plt.xlabel("Sepal Width (cm)")
+plt.ylabel("Frequency")
+plt.show()
+
+# 4. Scatter Plot
+plt.figure(figsize=(7, 5))
+sns.scatterplot(data=df, x='sepal length (cm)', y='petal length (cm)', hue='species')
+plt.title("Sepal Length vs Petal Length")
+plt.xlabel("Sepal Length (cm)")
+plt.ylabel("Petal Length (cm)")
+plt.legend(title="Species")
+plt.show()
