@@ -1,0 +1,73 @@
+ Assignment 1: Design Your Own Class
+
+# Parent class
+class Smartphone:
+    def __init__(self, brand, model, storage):
+        self.__brand = brand  # private attribute (encapsulation)
+        self.model = model
+        self.storage = storage
+
+    def make_call(self, number):
+        print(f"{self.model} is calling {number}...")
+
+    def get_brand(self):  # Getter method (encapsulation)
+        return self.__brand
+
+    def set_brand(self, new_brand):  # Setter method (encapsulation)
+        self.__brand = new_brand
+
+    def info(self):
+        print(f"Smartphone: {self.__brand} {self.model}, Storage: {self.storage}GB")
+
+# Child class
+class GamingPhone(Smartphone):
+    def __init__(self, brand, model, storage, refresh_rate):
+        super().__init__(brand, model, storage)
+        self.refresh_rate = refresh_rate
+
+    def play_game(self, game_name):
+        print(f"Playing {game_name} at {self.refresh_rate}Hz on {self.model}!")
+
+    # Polymorphism: override the info method
+    def info(self):
+        print(f"Gaming Phone: {self.get_brand()} {self.model}, {self.storage}GB, {self.refresh_rate}Hz")
+
+
+# Activity 2: Polymorphism Challenge
+
+# Base class
+class Vehicle:
+    def move(self):
+        print("The vehicle is moving...")
+
+# Child classes
+class Car(Vehicle):
+    def move(self):
+        print("Driving on the road...")
+
+class Plane(Vehicle):
+    def move(self):
+        print("Flying in the sky...")
+
+class Boat(Vehicle):
+    def move(self):
+        print("Sailing on water...")
+
+
+# Example usage
+
+if __name__ == "__main__":
+    # Assignment 1
+    phone1 = Smartphone("Samsung", "Galaxy A15", 128)
+    gaming_phone = GamingPhone("Asus", "ROG Phone 7", 256, 144)
+
+    phone1.info()
+    phone1.make_call("0712345678")
+
+    gaming_phone.info()
+    gaming_phone.play_game("PUBG Mobile")
+
+    print("\n--- Polymorphism Challenge ---")
+    vehicles = [Car(), Plane(), Boat()]
+    for v in vehicles:
+        v.move()
