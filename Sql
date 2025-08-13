@@ -1,0 +1,98 @@
+-- This script creates a complete database for a Library Management System.
+-- It is structured for MySQL.
+
+-- Step 1: Create the database
+CREATE DATABASE IF NOT EXISTS library_management;
+USE library_management;
+
+-- Step 2: Create the tables with appropriate constraints and relationships
+
+-- Table for Authors
+CREATE TABLE authors (
+    author_id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    birth_year YEAR,
+    UNIQUE (first_name, last_name)
+);
+
+-- Table for Books
+CREATE TABLE books (
+    book_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    isbn VARCHAR(13) NOT NULL UNIQUE,
+    publication_year YEAR NOT NULL
+);
+
+-- Junction table for the M-M relationship between authors and books
+CREATE TABLE book_authors (
+    book_id INT,
+    author_id INT,
+    PRIMARY KEY (book_id, author_id),
+    FOREIGN KEY (book_id) REFERENCES books(book_id) ON DELETE CASCADE,
+    FOREIGN KEY (author_id) REFERENCES authors(author_id) ON DELETE CASCADE
+);
+
+-- Table for Library Members
+CREATE TABLE members (
+    member_id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    phone_number VARCHAR(20),
+    join_date DATE NOT NULL
+);
+
+-- Table for tracking Borrowings
+CREATE TABLE borrowings (
+    borrowing_id INT AUTO_INCREMENT PRIMARY KEY,
+    book_id INT NOT NULL,
+    member_id INT NOT NULL,
+    borrow_date DATE NOT NULL,
+    due_date DATE NOT NULL,
+    return_date DATE,
+    FOREIGN KEY (book_id) REFERENCES books(book_id) ON DELETE RESTRICT,
+    FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE RESTRICT
+);
+
+-- Step 3: Insert some sample data to test the relationships
+
+-- Insert data into authors table
+INSERT INTO authors (first_name, last_name, birth_year) VALUES
+('J.R.R.', 'Tolkien', 1892),
+('J.K.', 'Rowling', 1965),
+('Stephen', 'King', 1947),
+('George', 'Orwell', 1903);
+
+-- Insert data into books table
+INSERT INTO books (title, isbn, publication_year) VALUES
+('The Lord of the Rings', '9780618640157', 1954),
+('The Hobbit', '9780547928227', 1937),
+('Harry Potter and the Sorcerer''s Stone', '9780590353403', 1997),
+('IT', '9780451524935', 1986),
+('1984', '9780451524935', 1949);
+
+-- Link authors to books (M-M relationship)
+INSERT INTO book_authors (book_id, author_id) VALUES
+(1, 1), -- The Lord of the Rings by Tolkien
+(2, 1), -- The Hobbit by Tolkien
+(3, 2), -- Harry Potter by Rowling
+(4, 3), -- IT by King
+(5, 4); -- 1984 by Orwell
+
+-- Insert data into members table
+INSERT INTO members (first_name, last_name, email, phone_number, join_date) VALUES
+('John', 'Doe', 'john.doe@example.com', '123-456-7890', '2025-01-10'),
+('Jane', 'Smith', 'jane.smith@example.com', '098-765-4321', '2025-02-15');
+
+-- Insert data into borrowings table
+-- Assuming today's date is '2025-08-13' for the borrowing
+INSERT INTO borrowings (book_id, member_id, borrow_date, due_date) VALUES
+(1, 1, '2025-08-13', '2025-08-27'),
+(3, 2, '2025-08-13', '2025-08-27');
+
+-- Step 4: Add indexes for better performance on common queries
+CREATE INDEX idx_authors_name ON authors(last_name, first_name);
+CREATE INDEX idx_books_title ON books(title);
+CREATE INDEX idx_members_email ON members(email);
+CREATE INDEX idx_borrowings_due_date ON borrowings(due_date);
