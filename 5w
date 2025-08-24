@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JavaScript Assignment Project</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>JavaScript Project Demo</h1>
+
+  <p id="message">Click the button to see some magic!</p>
+
+  <button id="btnCheck">Check Number</button>
+  <button id="btnList">Show List</button>
+  <button id="btnChange">Change Text</button>
+
+  <ul id="listContainer"></ul>
+
+  <script src="script.js"></script>
+</body>
+</html>
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 40px;
+}
+
+button {
+  margin: 10px;
+  padding: 10px 20px;
+  border: none;
+  background: teal;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: darkslategray;
+}
+
+#listContainer {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 20px;
+}
